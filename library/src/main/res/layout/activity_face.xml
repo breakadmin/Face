@@ -3,6 +3,6 @@
     android:id="@+id/myRecycler"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bgColor_overlay">
+    android:background="@color/plus_overlay">
 
 </android.support.v7.widget.RecyclerView>

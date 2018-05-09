@@ -11,13 +11,16 @@
         android:id="@+id/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/editbox_background_normal"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/emojitext"/>
+        android:hint="请输入"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/emojitext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="200dp"
