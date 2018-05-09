@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="cut_line_color">#d7d7db</color>
+    <!--覆盖颜色-->
+    <color name="bgColor_overlay">#60000000</color>
+    <!--覆盖颜色-->
+    <color name="plus_overlay">#40000000</color>
+    <color name="EditText_color">#000000</color>
+</resources>
