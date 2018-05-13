@@ -39,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/FaceOptions" >
 
-        <cn.youngkaaa.yviewpager.YViewPager
+        <com.example.library.Component.MyViewPager
             android:id="@+id/MyViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:orientation="horizontal"/>
+            />
     </com.example.library.Component.MyLinearLayout>
 
 

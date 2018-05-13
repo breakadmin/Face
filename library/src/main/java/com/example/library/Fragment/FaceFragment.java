@@ -20,7 +20,9 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.example.library.Adapter.MyEmojiAdapter;
+import com.example.library.Component.MyViewPager;
 import com.example.library.FaceData.EmojiData;
+import com.example.library.Interface.FaceListener;
 import com.example.library.R;
 
 import java.util.ArrayList;
@@ -28,13 +30,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.youngkaaa.yviewpager.YViewPager;
 
 
 public class FaceFragment extends Fragment {
 
     int PageSize;//每行显示的最大数量
-    YViewPager emojiPanel;
+    MyViewPager emojiPanel;
     LinearLayout ViewGroup;
     LinearLayout MyLinearLayout;
     FaceListener faceListener;
@@ -45,10 +46,7 @@ public class FaceFragment extends Fragment {
     }
 
 
-    public interface FaceListener{
-        void  display(Map<String, Integer> face);
-        void  delete();
-    }
+
     public void init( int PageSize) {
         this.PageSize = PageSize;
     }
@@ -65,7 +63,7 @@ public class FaceFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_emoji, null);
         MyLinearLayout = (LinearLayout) view.findViewById(R.id.MyLinearLayout);
         ViewGroup = (LinearLayout) view.findViewById(R.id.ViewGroup);
-        emojiPanel = (YViewPager) view.findViewById(R.id.emoji_panel);
+        emojiPanel = (MyViewPager) view.findViewById(R.id.emoji_panel);
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
         MyLinearLayout.setLayoutParams(new LinearLayout.LayoutParams

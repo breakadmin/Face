@@ -22,14 +22,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <cn.youngkaaa.yviewpager.YViewPager
+                <com.example.library.Component.MyViewPager
                     android:id="@+id/emoji_panel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:orientation="horizontal"
                     android:layout_weight="1">
 
-                </cn.youngkaaa.yviewpager.YViewPager>
+                </com.example.library.Component.MyViewPager>
 
                 <LinearLayout
                     android:id="@+id/ViewGroup"

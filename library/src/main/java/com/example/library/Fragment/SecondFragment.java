@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 
 import com.example.library.FaceData.EmojiData;
+import com.example.library.Interface.PictureClickListener;
 import com.example.library.R;
 
 import java.util.List;
@@ -37,9 +38,7 @@ public class SecondFragment extends Fragment {
         this.pictureClickListener = pictureClickListener;
     }
 
-    public  interface PictureClickListener{
-        void PictureDisplay(int res);
-    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
