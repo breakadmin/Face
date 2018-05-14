@@ -36,11 +36,19 @@ public class FaceFragment extends Fragment {
     private RecyclerView FaceOptions;
      MyViewPager ViewPager;
     MySwitchAdapter myRecyclerViewAdapter;
-
+    PictureClickListener listener;
     EditText Text;
     TextView emoji;
 
+    public void setPictureClickListener(PictureClickListener listener) {
+        this.listener = listener;
+    }
 
+    /**
+     * 绑定需要显示表情的文本输入框 与需要显示gif的TextView
+     * @param Text
+     * @param emoji
+     */
     public void bind(EditText Text,TextView emoji){
         this.Text=Text;
         this.emoji=emoji;
@@ -61,62 +69,70 @@ public class FaceFragment extends Fragment {
         faceFragment.setFaceListener(new FaceListener() {
             @Override
             public void display(Map<String, Integer> face) {
-                Text.append(new EmojiData().disPlayEmoji(face, getContext()));
-
-                int faces = 0;
-                for(Map.Entry<String, Integer> entry: face.entrySet()){//获取表情ID
-                    faces=entry.getValue();
+                if (Text!=null){
+                    Text.append(new EmojiData().disPlayEmoji(face, getContext()));
                 }
-                SpannableString value = SpannableString.valueOf("搜索");
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeResource(getResources(), faces, options);
-                String type = options.outMimeType;
-                if (type.toLowerCase().contains("gif")){//判断是否gif
-                    try{
-                        WeakReference<AnimatedImageSpan> localImageSpanRef = new WeakReference<AnimatedImageSpan>(new AnimatedImageSpan(new AnimatedGifDrawable(getResources()
-                                .openRawResource(faces), new AnimatedGifDrawable.UpdateListener() {
-                            @Override
-                            public void update() {//update the textview
-                                emoji.postInvalidate();
-                            }
-                        })));
-                        value.setSpan(localImageSpanRef.get(), 0, 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                        emoji.setText(value);
-                    }catch(Exception e){
+              if (emoji!=null){
+                  int faces = 0;
+                  for(Map.Entry<String, Integer> entry: face.entrySet()){//获取表情ID
+                      faces=entry.getValue();
+                  }
+                  SpannableString value = SpannableString.valueOf("搜索");
+                  BitmapFactory.Options options = new BitmapFactory.Options();
+                  options.inJustDecodeBounds = true;
+                  BitmapFactory.decodeResource(getResources(), faces, options);
+                  String type = options.outMimeType;
+                  if (type.toLowerCase().contains("gif")){//判断是否gif
+                      try{
+                          WeakReference<AnimatedImageSpan> localImageSpanRef = new WeakReference<AnimatedImageSpan>(new AnimatedImageSpan(new AnimatedGifDrawable(getResources()
+                                  .openRawResource(faces), new AnimatedGifDrawable.UpdateListener() {
+                              @Override
+                              public void update() {//update the textview
+                                  emoji.postInvalidate();
+                              }
+                          })));
+                          value.setSpan(localImageSpanRef.get(), 0, 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                          emoji.setText(value);
+                      }catch(Exception e){
 
-                    }
-                }
+                      }
+                  }
+              }
+
 
             }
 
             @Override
             public void delete() {
-                // 删除表情
-                String text = Text.getText().toString();
-                if (text.isEmpty()) {
-                    return;
-                }
-                if (!Text.isFocused()) {//获取焦点
-                    Text.setSelection(Text.length());
-                    Text.requestFocus();
-                }
-                if ("]".equals(text.substring(text.length() - 1, text.length()))) {
-                    int index = text.lastIndexOf("[");
-                    Text.getText().delete(index, text.length());
-                } else {
-                    int index = Text.getSelectionStart();
-                    Text.getText().delete(index - 1, index);
+                if (Text!=null){
+                    // 删除表情
+                    String text = Text.getText().toString();
+                    if (text.isEmpty()) {
+                        return;
+                    }
+                    if (!Text.isFocused()) {//获取焦点
+                        Text.setSelection(Text.length());
+                        Text.requestFocus();
+                    }
+                    if ("]".equals(text.substring(text.length() - 1, text.length()))) {
+                        int index = text.lastIndexOf("[");
+                        Text.getText().delete(index, text.length());
+                    } else {
+                        int index = Text.getSelectionStart();
+                        Text.getText().delete(index - 1, index);
 
+                    }
                 }
+
 
             }
         });
         recyclerFragment.setPictureClickListener(new PictureClickListener() {//展示表情
             @Override
             public void PictureDisplay(int res) {
-
-//                imageView.setImageResource(res);
+                if (listener!=null){
+                    listener.PictureDisplay(res);
+                }
             }
         });
         ViewPager.setAdapter(new MyViewPagerAdapter(getActivity().getSupportFragmentManager(), fragments));

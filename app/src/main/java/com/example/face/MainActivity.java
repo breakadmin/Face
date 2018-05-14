@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.library.Fragment.FaceFragment;
+import com.example.library.Interface.PictureClickListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
         Text.setSelection(Text.length());
 
         FaceFragment fragmentA=new FaceFragment();
-        fragmentA.bind(Text,emoji);
+        fragmentA.bind(Text,null);
+        fragmentA.setPictureClickListener(new PictureClickListener() {
+            @Override
+            public void PictureDisplay(int res) {
+                imageView.setImageResource(res);
+            }
+        });
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fragmentA).commit();
