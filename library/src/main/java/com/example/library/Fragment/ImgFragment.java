@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by 惠普 on 2018-04-01.
+ * 表情图片
  */
 
-public class SecondFragment extends Fragment {
+public class ImgFragment extends Fragment {
 
     RecyclerView myRecycler;
     PictureClickListener pictureClickListener;

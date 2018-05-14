@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-  >
+    >
 
     <EditText
         android:id="@+id/Text"
@@ -27,24 +27,17 @@
         android:layout_height="wrap_content"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/FaceOptions"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true" />
 
 
-    <com.example.library.Component.MyLinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/FaceOptions" >
+        android:layout_alignParentBottom="true"
+        android:id="@+id/container"
+        android:orientation="vertical">
 
-        <com.example.library.Component.MyViewPager
-            android:id="@+id/MyViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-    </com.example.library.Component.MyLinearLayout>
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

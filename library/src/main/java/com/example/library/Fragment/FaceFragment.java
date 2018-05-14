@@ -1,220 +1,126 @@
 package com.example.library.Fragment;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.example.library.Adapter.MyEmojiAdapter;
+import com.example.library.Adapter.MySwitchAdapter;
 import com.example.library.Component.MyViewPager;
 import com.example.library.FaceData.EmojiData;
 import com.example.library.Interface.FaceListener;
+import com.example.library.Interface.PictureClickListener;
 import com.example.library.R;
+import com.example.library.disPlayGif.AnimatedGifDrawable;
+import com.example.library.disPlayGif.AnimatedImageSpan;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-
 public class FaceFragment extends Fragment {
+    private RecyclerView FaceOptions;
+     MyViewPager ViewPager;
+    MySwitchAdapter myRecyclerViewAdapter;
 
-    int PageSize;//每行显示的最大数量
-    MyViewPager emojiPanel;
-    LinearLayout ViewGroup;
-    LinearLayout MyLinearLayout;
-    FaceListener faceListener;
+    EditText Text;
+    TextView emoji;
 
 
-    public void setFaceListener(FaceListener faceListener) {
-        this.faceListener = faceListener;
+    public void bind(EditText Text,TextView emoji){
+        this.Text=Text;
+        this.emoji=emoji;
     }
-
-
-
-    public void init( int PageSize) {
-        this.PageSize = PageSize;
-    }
-
-    List<Map<String, Integer>> emojis=new ArrayList<>();
-    private int totalPage;//总的页数
-    List<GridView> gridViews = new ArrayList<GridView>();
-    ImageView[] pointView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_fragment, null);
+        initView(view);
+        List<Fragment> fragments = new ArrayList<Fragment>();
+        ImgFragment recyclerFragment = new ImgFragment();
 
-        View view = inflater.inflate(R.layout.fragment_emoji, null);
-        MyLinearLayout = (LinearLayout) view.findViewById(R.id.MyLinearLayout);
-        ViewGroup = (LinearLayout) view.findViewById(R.id.ViewGroup);
-        emojiPanel = (MyViewPager) view.findViewById(R.id.emoji_panel);
+        EmojiFragment faceFragment = new EmojiFragment();
+        faceFragment.init(20);
+        fragments.add(faceFragment);
+        fragments.add(recyclerFragment);
+        faceFragment.setFaceListener(new FaceListener() {
+            @Override
+            public void display(Map<String, Integer> face) {
+                Text.append(new EmojiData().disPlayEmoji(face, getContext()));
 
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        MyLinearLayout.setLayoutParams(new LinearLayout.LayoutParams
-               (dm.widthPixels, dm.heightPixels / 3));
-
-
-        initDatas();
-        setLabelPoint();
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-    }
-
-    public void initDatas() {
-        EmojiData emojiDatas = new EmojiData();
-        Map<String,Integer> map=emojiDatas.initDatas();//获取表情包资源
-        for(Map.Entry<String,Integer> entry:map.entrySet()){
-            Map<String,Integer> m= new HashMap<>();
-            m.put(entry.getKey(),entry.getValue());
-            emojis.add(m);
-
-        }
-
-
-
-        totalPage = (int) Math.ceil(emojis.size() * 1.0 / PageSize);//总数据÷每页最大显示数
-
-        for (int i = 0; i < totalPage; i++) {
-            GridView gv = new GridView(getContext());
-            gv.setNumColumns(7);
-            gv.setVerticalSpacing(30);
-            gv.setPadding(20,20,20,20);
-            gv.setGravity(Gravity.VERTICAL_GRAVITY_MASK);
-            gv.setSelector(new ColorDrawable(Color.TRANSPARENT)); // 去除点击时的背景色
-            gv.setAdapter(new MyEmojiAdapter(getContext(), emojis, i, PageSize));
-
-
-            gridViews.add(gv);
-            final int position = i;
-            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    int pos = i + position * PageSize;//重新计算位置
-                    //是否末页删除按钮
-                    if (pos < emojis.size()) {//否
-                        //是否每页删除按钮
-                        if (i != PageSize) {//否
-                            // 展示表情
-                            if (faceListener!=null){
-                                Map<String,Integer> map=emojis.get(pos);
-                                faceListener.display(map);
+                int faces = 0;
+                for(Map.Entry<String, Integer> entry: face.entrySet()){//获取表情ID
+                    faces=entry.getValue();
+                }
+                SpannableString value = SpannableString.valueOf("搜索");
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeResource(getResources(), faces, options);
+                String type = options.outMimeType;
+                if (type.toLowerCase().contains("gif")){//判断是否gif
+                    try{
+                        WeakReference<AnimatedImageSpan> localImageSpanRef = new WeakReference<AnimatedImageSpan>(new AnimatedImageSpan(new AnimatedGifDrawable(getResources()
+                                .openRawResource(faces), new AnimatedGifDrawable.UpdateListener() {
+                            @Override
+                            public void update() {//update the textview
+                                emoji.postInvalidate();
                             }
-
-                        } else {//是
-                            if (faceListener!=null){
-                            faceListener.delete();
-                            }
-                        }
-                    } else {//是
-                            if (faceListener!=null){
-                        faceListener.delete();
-                            }
+                        })));
+                        value.setSpan(localImageSpanRef.get(), 0, 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        emoji.setText(value);
+                    }catch(Exception e){
 
                     }
+                }
 
+            }
+
+            @Override
+            public void delete() {
+                // 删除表情
+                String text = Text.getText().toString();
+                if (text.isEmpty()) {
+                    return;
+                }
+                if (!Text.isFocused()) {//获取焦点
+                    Text.setSelection(Text.length());
+                    Text.requestFocus();
+                }
+                if ("]".equals(text.substring(text.length() - 1, text.length()))) {
+                    int index = text.lastIndexOf("[");
+                    Text.getText().delete(index, text.length());
+                } else {
+                    int index = Text.getSelectionStart();
+                    Text.getText().delete(index - 1, index);
 
                 }
-            });
-        }
-        emojiPanel.setAdapter(new MyViewAdapter(getContext(), gridViews));
 
-
-    }
-
-
-    class MyClickListener implements View.OnClickListener {
-        int Position;
-
-        public MyClickListener(int Position) {
-            this.Position = Position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            emojiPanel.setCurrentItem(Position, false);
-        }
-    }
-
-    /**
-     * 设置选中的"·"的状态，是否选中
-     *
-     * @param selectItems
-     */
-    private void setPointState(int selectItems) {
-        for (int i = 0; i < totalPage; i++) {
-            if (i == selectItems) {
-
-                Glide
-                        .with(getContext())
-                        .load(R.mipmap.indicator_point_select)
-                        .placeholder(R.mipmap.indicator_point_select)
-                        .crossFade()//图片淡入加载
-                        .priority(Priority.LOW)
-                        .skipMemoryCache(true)
-                        .into(pointView[i]);
-//                pointView[i].setBackgroundResource(R.mipmap.indicator_point_select);
-            } else {
-                Glide
-                        .with(getContext())
-                        .load(R.mipmap.indicator_point_normal)
-                        .placeholder(R.mipmap.indicator_point_normal)
-                        .crossFade()//图片淡入加载
-                        .priority(Priority.LOW)
-                        .skipMemoryCache(true)
-                        .into(pointView[i]);
-//                pointView[i].setBackgroundResource(R.mipmap.indicator_point_normal);
             }
-        }
-    }
+        });
+        recyclerFragment.setPictureClickListener(new PictureClickListener() {//展示表情
+            @Override
+            public void PictureDisplay(int res) {
 
-    /**
-     * 小点的设置与监听
-     */
-    private void setLabelPoint() {
-
-        //添加"·"的图片
-        pointView = new ImageView[totalPage];
-        for (int i = 0; i < totalPage; i++) {
-            ImageView view = new ImageView(getContext());
-            pointView[i] = view;
-            pointView[i].setOnClickListener(new MyClickListener(i));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            ViewGroup.addView(view, layoutParams);
-
-        }
-        setPointState(0);
-        //监听ViewPager的变化，从而更新·(小点)
-        emojiPanel.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//                imageView.setImageResource(res);
+            }
+        });
+        ViewPager.setAdapter(new MyViewPagerAdapter(getActivity().getSupportFragmentManager(), fragments));
+        ViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -222,9 +128,8 @@ public class FaceFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-
-                setPointState(position);
-
+                myRecyclerViewAdapter.setPosition(position);
+                myRecyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -233,46 +138,55 @@ public class FaceFragment extends Fragment {
             }
         });
 
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mLayoutManager.setOrientation(OrientationHelper.HORIZONTAL);
+        FaceOptions.setLayoutManager(mLayoutManager);
+//如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
+        FaceOptions.setHasFixedSize(true);
+
+
+//创建并设置Adapter
+        List<Integer> s = new ArrayList<>();
+        for (int i = 0; i < fragments.size(); i++) {
+            s.add(R.mipmap.face_tip);
+        }
+        myRecyclerViewAdapter = new MySwitchAdapter(getContext(), s);
+        FaceOptions.setAdapter(myRecyclerViewAdapter);
+        myRecyclerViewAdapter.setOnItemClickListener(new MySwitchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                myRecyclerViewAdapter.setPosition(position);
+                myRecyclerViewAdapter.notifyDataSetChanged();
+
+                ViewPager.setCurrentItem(position, false);
+
+            }
+        });
+        return view;
     }
 
+    private void initView(View view) {
+        FaceOptions = (RecyclerView) view.findViewById(R.id.FaceOptions);
+       ViewPager = (MyViewPager) view.findViewById(R.id.MyViewPager);
+    }
+    class MyViewPagerAdapter extends FragmentPagerAdapter {
+        private List<Fragment> fragment;
 
-    class MyViewAdapter extends PagerAdapter {
-        Context context;
-        List<GridView> data;
-
-        public MyViewAdapter(Context context, List<GridView> data) {
-            this.context = context;
-            this.data = data;
+        public MyViewPagerAdapter(FragmentManager fm, List<Fragment> fragment) {
+            super(fm);
+            this.fragment = fragment;
         }
 
-        // 显示多少个页面
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragment.get(position);
+        }
+
         @Override
         public int getCount() {
-            return gridViews.size();
-        }
-
-        // 来判断显示的是否是同一张图片，这里我们将两个参数相比较返回即可
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        // 初始化显示的条目对象
-        @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            // return super.instantiateItem(container, position);
-            container.addView(gridViews.get(position)); // 添加到ViewPager容器
-
-            return gridViews.get(position);
-        }
-
-
-        // 销毁条目对象
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            // super.destroyItem(container, position, object);
-            container.removeView(gridViews.get(position));
+            return fragment.size();
         }
     }
-
 }

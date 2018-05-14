@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+
+    <com.example.library.Component.MyViewPager
+        android:id="@+id/MyViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+       >
+
+    </com.example.library.Component.MyViewPager>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/FaceOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</LinearLayout>
