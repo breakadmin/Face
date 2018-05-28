@@ -208,10 +208,7 @@ public class EmojiFragment extends Fragment {
             ImageView view = new ImageView(getContext());
             pointView[i] = view;
             pointView[i].setOnClickListener(new MyClickListener(i));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            ViewGroup.addView(view, layoutParams);
+            ViewGroup.addView(view);
 
         }
         setPointState(0);
