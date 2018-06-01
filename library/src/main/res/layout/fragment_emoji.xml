@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/MyLinearLayout"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:orientation="vertical">
-
-<com.example.library.Component.MyViewPager
-    android:id="@+id/emoji_panel"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/middle_padding"
-    android:layout_weight="1" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.example.library.Component.MyViewPager
+        android:id="@+id/emoji_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
 
+    <LinearLayout
+        android:id="@+id/ViewGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-<LinearLayout
-    android:id="@+id/ViewGroup"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/point_height"
-    android:gravity="center|top"
-    android:orientation="horizontal">
 
-
-</LinearLayout>
+    </LinearLayout>
 </LinearLayout>

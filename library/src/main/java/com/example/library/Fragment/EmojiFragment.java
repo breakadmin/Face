@@ -39,7 +39,7 @@ public class EmojiFragment extends Fragment {
     int PageSize;//每行显示的最大数量
     MyViewPager emojiPanel;
     LinearLayout ViewGroup;
-    LinearLayout MyLinearLayout;
+
     FaceListener faceListener;
 
 
@@ -63,13 +63,9 @@ public class EmojiFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_emoji, null);
-        MyLinearLayout = (LinearLayout) view.findViewById(R.id.MyLinearLayout);
         ViewGroup = (LinearLayout) view.findViewById(R.id.ViewGroup);
         emojiPanel = (MyViewPager) view.findViewById(R.id.emoji_panel);
 
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        MyLinearLayout.setLayoutParams(new LinearLayout.LayoutParams
-               (dm.widthPixels, dm.heightPixels / 3));
 
 
         initDatas();
@@ -105,11 +101,9 @@ public class EmojiFragment extends Fragment {
         totalPage = (int) Math.ceil(emojis.size() * 1.0 / PageSize);//总数据÷每页最大显示数
 
         for (int i = 0; i < totalPage; i++) {
-            GridView gv = new GridView(getContext());
-            gv.setNumColumns(7);
-            gv.setVerticalSpacing(30);
-            gv.setPadding(20,20,20,20);
-            gv.setGravity(Gravity.VERTICAL_GRAVITY_MASK);
+            View view=LayoutInflater.from(getContext()).inflate(R.layout.face_view,null);
+            GridView gv =view.findViewById(R.id.faceView);
+            gv.setNumColumns(6);
             gv.setSelector(new ColorDrawable(Color.TRANSPARENT)); // 去除点击时的背景色
             gv.setAdapter(new MyEmojiAdapter(getContext(), emojis, i, PageSize));
 

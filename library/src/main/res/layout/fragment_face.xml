@@ -2,17 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
 
     <com.example.library.Component.MyViewPager
         android:id="@+id/MyViewPager"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-       >
+        android:layout_height="wrap_content"/>
 
-    </com.example.library.Component.MyViewPager>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/FaceOptions"
