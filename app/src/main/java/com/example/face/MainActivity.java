@@ -27,8 +27,7 @@ public class MainActivity extends AppCompatActivity {
     TextView emoji;
     private TextView emojitext;
     private FaceFragment Face;
-    private RelativeLayout MyScreen;
-    boolean isShow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,45 +36,12 @@ public class MainActivity extends AppCompatActivity {
         final DisplayMetrics dm=getResources().getDisplayMetrics();
 
 
-        MyScreen.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                MyScreen.getWindowVisibleDisplayFrame(r);
-                int height = r.bottom;
-
-                int screenHeight = MyScreen.getRootView().getHeight();
-
-                int keyboardHeight = dm.heightPixels - (r.bottom + r.top);
-                if (isShow) {
-                    // 当可见区域大于屏幕4/5时即关闭键盘，隐藏输入框
-                    if (height >dm.heightPixels * 0.8f) {
-                        isShow = false;
-                        Toast.makeText(MainActivity.this, "关闭", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    // 当可见区域小于屏幕4/5时即弹出键盘
-                    if (height < dm.heightPixels * 0.8f) {
-                        isShow = true;
-                        Face.onDestroy();
-                        Face=null;
-                        Face = (FaceFragment) getSupportFragmentManager().findFragmentById(R.id.Face);
-
-                        Face.setHeight(keyboardHeight);
-                        Toast.makeText(MainActivity.this, "打开"+keyboardHeight, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-
-            }
-        });
         Text = (EditText) findViewById(R.id.Text);
         imageView = (ImageView) findViewById(R.id.imageView);
         emoji = findViewById(R.id.emojitext);
 
         Text.setSelection(Text.length());
-        Face.bind(Text, null);
+        Face.bind(Text, emojitext);
         Face.setPictureClickListener(new PictureClickListener() {
             @Override
             public void PictureDisplay(int res) {
@@ -92,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
         Face = (FaceFragment) getSupportFragmentManager().findFragmentById(R.id.Face);
 
-        MyScreen = (RelativeLayout) findViewById(R.id.MyScreen);
 
     }
 }

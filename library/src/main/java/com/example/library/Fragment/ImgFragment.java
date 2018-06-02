@@ -18,7 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
-import com.example.library.FaceData.EmojiData;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.library.Utils.EmojiData;
 import com.example.library.Interface.PictureClickListener;
 import com.example.library.R;
 
@@ -43,7 +45,7 @@ public class ImgFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_face, container, false);
+        View view = inflater.inflate(R.layout.view_recycler, container, false);
         myRecycler = (RecyclerView) view.findViewById(R.id.myRecycler);
 
 
@@ -112,7 +114,12 @@ public class ImgFragment extends Fragment {
             Map<String,Integer> map=data.get(position);
             for(Map.Entry<String, Integer> entry: map.entrySet()){
                 holder.imageView.setImageResource(entry.getValue());
-
+                Glide.with(context)
+                        .load(entry.getValue())
+                        .asGif()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .error(entry.getValue())
+                        .into( holder.imageView);
             }
 
             holder.textView.setVisibility(View.GONE);

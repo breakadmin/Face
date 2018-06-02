@@ -7,16 +7,5 @@
     android:gravity="center|top"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/emoji"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true" />
-
-    <TextView
-        android:id="@+id/emoji_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="TextView" />
+    <include layout="@layout/face_item" />
 </LinearLayout>

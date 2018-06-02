@@ -1,4 +1,4 @@
-package com.example.library.Component;
+package com.example.library.view;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -24,6 +24,7 @@ import com.example.library.R;
 
 public class MyViewPager extends ViewPager
 {
+
 
     /**
      * maximum z distance to translate child view
@@ -431,4 +432,5 @@ public class MyViewPager extends ViewPager
         }
         return false;
     }
+
 }

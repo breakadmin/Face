@@ -1,6 +1,5 @@
 package com.example.library.Fragment;
 
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.library.Adapter.MySwitchAdapter;
-import com.example.library.Component.MyViewPager;
-import com.example.library.FaceData.EmojiData;
+import com.example.library.view.MyViewPager;
+import com.example.library.Utils.EmojiData;
 import com.example.library.Interface.FaceListener;
 import com.example.library.Interface.PictureClickListener;
 import com.example.library.R;
@@ -74,9 +72,8 @@ public class FaceFragment extends Fragment {
         displayUtils=new DisplayUtils(getContext());
         ViewGroup.LayoutParams layoutParams = ViewPager.getLayoutParams();
         if (height == 0) {
-            height = displayUtils.dp2px(185);
+            height = displayUtils.dp2px(190);
         }
-        Toast.makeText(getContext(), "刷新", Toast.LENGTH_SHORT).show();
 
 
         layoutParams.height = height;
@@ -108,14 +105,14 @@ public class FaceFragment extends Fragment {
                     String type = options.outMimeType;
                     if (type.toLowerCase().contains("gif")) {//判断是否gif
                         try {
-                            WeakReference<AnimatedImageSpan> localImageSpanRef = new WeakReference<AnimatedImageSpan>(new AnimatedImageSpan(new AnimatedGifDrawable(getResources()
+                            AnimatedImageSpan localImageSpanRef = new AnimatedImageSpan(new AnimatedGifDrawable(getResources()
                                     .openRawResource(faces), new AnimatedGifDrawable.UpdateListener() {
                                 @Override
                                 public void update() {//update the textview
                                     emoji.postInvalidate();
                                 }
-                            })));
-                            value.setSpan(localImageSpanRef.get(), 0, 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            },getContext()));
+                            value.setSpan(localImageSpanRef, 0, value.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                             emoji.setText(value);
                         } catch (Exception e) {
 

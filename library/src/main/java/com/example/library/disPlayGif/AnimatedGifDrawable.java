@@ -1,9 +1,12 @@
 package com.example.library.disPlayGif;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+
+import com.example.library.Utils.DisplayUtils;
 
 import java.io.InputStream;
 
@@ -19,22 +22,24 @@ public class AnimatedGifDrawable extends AnimationDrawable {
 
     private int mCurrentIndex = 0;
     private UpdateListener mListener;
-
-    public AnimatedGifDrawable(InputStream source, UpdateListener listener) {
+    DisplayUtils displayUtils;
+    public AnimatedGifDrawable(InputStream source, UpdateListener listener, Context context) {
         mListener = listener;
         GifDecoder decoder = new GifDecoder();
         decoder.read(source);
+        displayUtils=new DisplayUtils(context);
+        int w=displayUtils.dp2px(35);
 
         // Iterate through the gif frames, add each as animation frame
         for (int i = 0; i < decoder.getFrameCount(); i++) {
             Bitmap bitmap = decoder.getFrame(i);
             BitmapDrawable drawable = new BitmapDrawable(bitmap);
             // Explicitly set the bounds in order for the frames to display
-            drawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            drawable.setBounds(0, 0, w, w);
             addFrame(drawable, decoder.getDelay(i));
             if (i == 0) {
                 // Also set the bounds for this container drawable
-                setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                setBounds(0, 0, w,w);
             }
         }
     }
