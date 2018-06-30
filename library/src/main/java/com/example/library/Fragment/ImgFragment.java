@@ -56,7 +56,7 @@ public class ImgFragment extends Fragment {
         layoutManager.setOrientation(OrientationHelper.VERTICAL);//设置为垂直布局，这也是默认的
         EmojiData emojiDatas = new EmojiData();
         final List<Map<String,Integer>> data = emojiDatas.jgzDatas();//获取表情包资源
-        Toast.makeText(getContext(), "数量"+data.size(), Toast.LENGTH_SHORT).show();
+
         MyAdapter myAdapter = new MyAdapter(getContext(), data);
         myRecycler.setAdapter(myAdapter);
         myAdapter.setItemClickListener(new MyAdapter.ItemClickListener() {
