@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.example.library.Adapter.MyEmojiAdapter;
+import com.example.library.view.MyGridView;
 import com.example.library.view.MyViewPager;
 import com.example.library.Utils.EmojiData;
 import com.example.library.Interface.FaceListener;
@@ -37,9 +38,8 @@ public class EmojiFragment extends Fragment {
     int PageSize;//每行显示的最大数量
     MyViewPager emojiPanel;
     LinearLayout ViewGroup;
-
     FaceListener faceListener;
-
+    int num;
 
     public void setFaceListener(FaceListener faceListener) {
         this.faceListener = faceListener;
@@ -47,8 +47,9 @@ public class EmojiFragment extends Fragment {
 
 
 
-    public void init( int PageSize) {
+    public void init( int num,int PageSize) {
         this.PageSize = PageSize;
+        this.num=num;
     }
 
     List<Map<String, Integer>> emojis=new ArrayList<>();
@@ -63,7 +64,6 @@ public class EmojiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_emoji, null);
         ViewGroup = (LinearLayout) view.findViewById(R.id.ViewGroup);
         emojiPanel = (MyViewPager) view.findViewById(R.id.emoji_panel);
-
 
 
         initDatas();
@@ -100,8 +100,8 @@ public class EmojiFragment extends Fragment {
 
         for (int i = 0; i < totalPage; i++) {
             View view=LayoutInflater.from(getContext()).inflate(R.layout.face_view,null);
-            GridView gv =view.findViewById(R.id.faceView);
-            gv.setNumColumns(6);
+            MyGridView gv =view.findViewById(R.id.faceView);
+            gv.setNumColumns(num);
             gv.setSelector(new ColorDrawable(Color.TRANSPARENT)); // 去除点击时的背景色
             gv.setAdapter(new MyEmojiAdapter(getContext(), emojis, i, PageSize));
 
@@ -166,25 +166,9 @@ public class EmojiFragment extends Fragment {
         for (int i = 0; i < totalPage; i++) {
             if (i == selectItems) {
 
-                Glide
-                        .with(getContext())
-                        .load(R.mipmap.indicator_point_select)
-                        .placeholder(R.mipmap.indicator_point_select)
-                        .crossFade()//图片淡入加载
-                        .priority(Priority.LOW)
-                        .skipMemoryCache(true)
-                        .into(pointView[i]);
-//                pointView[i].setBackgroundResource(R.mipmap.indicator_point_select);
+               pointView[i].setBackgroundResource(R.mipmap.indicator_point_select);
             } else {
-                Glide
-                        .with(getContext())
-                        .load(R.mipmap.indicator_point_normal)
-                        .placeholder(R.mipmap.indicator_point_normal)
-                        .crossFade()//图片淡入加载
-                        .priority(Priority.LOW)
-                        .skipMemoryCache(true)
-                        .into(pointView[i]);
-//                pointView[i].setBackgroundResource(R.mipmap.indicator_point_normal);
+                pointView[i].setBackgroundResource(R.mipmap.indicator_point_normal);
             }
         }
     }

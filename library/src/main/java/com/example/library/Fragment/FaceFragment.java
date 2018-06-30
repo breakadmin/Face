@@ -74,8 +74,6 @@ public class FaceFragment extends Fragment {
         if (height == 0) {
             height = displayUtils.dp2px(190);
         }
-
-
         layoutParams.height = height;
 
 
@@ -84,7 +82,7 @@ public class FaceFragment extends Fragment {
         ImgFragment recyclerFragment = new ImgFragment();
 
         EmojiFragment faceFragment = new EmojiFragment();
-        faceFragment.init(23);
+        faceFragment.init(5,19);
         fragments.add(faceFragment);
         fragments.add(recyclerFragment);
         faceFragment.setFaceListener(new FaceListener() {
@@ -174,7 +172,6 @@ public class FaceFragment extends Fragment {
 
             }
         });
-
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(OrientationHelper.HORIZONTAL);
